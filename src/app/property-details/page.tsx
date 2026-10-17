@@ -453,7 +453,7 @@ export default function PropertyDetailsPage() {
                       alt="The Highland Ridge Estate"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3 bg-primary-container/80 backdrop-blur-md px-2.5 py-1 rounded text-surface text-label-caps font-label-caps uppercase">
+                    <div className="absolute top-3 left-3 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded text-white text-label-caps font-label-caps uppercase">
                       Hollywood Hills
                     </div>
                   </div>

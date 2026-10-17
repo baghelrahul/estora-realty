@@ -108,7 +108,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">
         <Link
           href={`/properties/${property.slug}/`}
-          className="w-full text-center block border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-primary dark:hover:text-on-primary py-2.5 rounded-lg text-label-lg font-label-lg transition-colors duration-200 font-medium"
+          className="w-full text-center block border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] dark:hover:text-[#FFFFFF] py-2.5 rounded-lg text-label-lg font-label-lg transition-colors duration-200 font-medium"
         >
           View Details
         </Link>

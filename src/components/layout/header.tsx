@@ -79,7 +79,7 @@ export function Header() {
               Wishlist
             </span>
             {count > 0 && (
-              <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-secondary text-surface text-[11px] font-bold flex items-center justify-center animate-in zoom-in duration-150">
+              <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-[#54634a] text-white dark:bg-[#9cb58e] dark:text-[#111412] text-[11px] font-bold flex items-center justify-center animate-in zoom-in duration-150">
                 {count}
               </span>
             )}
@@ -157,7 +157,7 @@ export function Header() {
                 <span>Saved Wishlist</span>
               </div>
               {count > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-secondary text-surface text-xs font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#54634a] text-white dark:bg-[#9cb58e] dark:text-[#111412] text-xs font-bold">
                   {count}
                 </span>
               )}
