@@ -45,7 +45,7 @@ export function ContactIntakeForm() {
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="inline-flex items-center px-6 py-2.5 rounded-lg border border-primary text-primary hover:bg-primary hover:text-surface text-label-lg font-label-lg transition-colors cursor-pointer"
+          className="inline-flex items-center px-6 py-2.5 rounded-lg border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] text-label-lg font-label-lg transition-colors cursor-pointer"
         >
           Submit Another Inquiry
         </button>
@@ -181,7 +181,7 @@ export function ContactIntakeForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="w-full sm:w-auto inline-flex items-center justify-center bg-primary-container hover:bg-[#323A35] text-surface text-label-lg font-label-lg rounded-lg px-8 py-3.5 transition-all duration-200 ease-out active:scale-95 shadow-sm cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto inline-flex items-center justify-center bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] text-label-lg font-label-lg rounded-lg px-8 py-3.5 transition-all duration-200 ease-out active:scale-95 shadow-sm cursor-pointer disabled:opacity-50"
         >
           <span>{status === "submitting" ? "Transmitting..." : "Send Inquiry"}</span>
           <span className="material-symbols-outlined ml-2 text-lg">arrow_forward</span>

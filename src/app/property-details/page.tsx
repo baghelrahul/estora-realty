@@ -96,7 +96,7 @@ export default function PropertyDetailsPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-outline-variant/40">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 rounded text-label-caps font-label-caps uppercase bg-primary-container text-surface">
+              <span className="px-2.5 py-0.5 rounded text-label-caps font-label-caps uppercase bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412]">
                 Available
               </span>
               <span className="px-2.5 py-0.5 rounded text-label-caps font-label-caps uppercase bg-secondary-container text-on-secondary-container">
@@ -398,13 +398,13 @@ export default function PropertyDetailsPage() {
                 <div className="relative h-64 bg-surface-container flex items-center justify-center border-b border-outline-variant/40 overflow-hidden">
                   <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#747874_1px,transparent_1px)] [background-size:16px_16px]" />
                   <div className="relative z-10 flex flex-col items-center">
-                    <div className="bg-primary text-surface px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-2 mb-1">
-                      <span className="w-2 h-2 rounded-full bg-secondary-fixed" />
-                      <span className="text-label-caps font-label-caps font-semibold uppercase tracking-wider text-surface">
+                    <div className="bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-2 mb-1">
+                      <span className="w-2 h-2 rounded-full bg-[#E4C896]" />
+                      <span className="text-label-caps font-label-caps font-semibold uppercase tracking-wider text-[#FAF9F5] dark:text-[#111412]">
                         1048 Stradella Road
                       </span>
                     </div>
-                    <div className="w-4 h-4 bg-primary rotate-45 -mt-2" />
+                    <div className="w-4 h-4 bg-[#202522] dark:bg-[#F2F1EC] rotate-45 -mt-2" />
                   </div>
                   <div className="absolute bottom-3 left-3 bg-surface-container-lowest/90 backdrop-blur-sm px-3 py-1 rounded border border-outline-variant/40 text-label-caps font-label-caps uppercase text-primary">
                     Bel-Air Crest Estates · Enclave Area

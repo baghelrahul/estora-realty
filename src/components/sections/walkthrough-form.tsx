@@ -138,7 +138,7 @@ export function WalkthroughForm({ propertyTitle = "The Bel-Air Glass Pavilion" }
               onClick={() => setTimeSlot(slot)}
               className={`text-center py-2 px-1 text-xs font-label-caps uppercase rounded border transition-all cursor-pointer ${
                 timeSlot === slot
-                  ? "bg-primary text-surface border-primary font-semibold"
+                  ? "bg-[#202522] text-[#FAF9F5] border-[#202522] dark:bg-[#F2F1EC] dark:text-[#111412] dark:border-[#F2F1EC] font-semibold"
                   : "border-outline-variant text-on-surface hover:border-outline"
               }`}
             >
@@ -167,7 +167,7 @@ export function WalkthroughForm({ propertyTitle = "The Bel-Air Glass Pavilion" }
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full py-3.5 rounded-lg bg-primary text-surface hover:bg-[#323A35] font-label-lg text-label-lg transition-colors cursor-pointer disabled:opacity-50 shadow-sm"
+        className="w-full py-3.5 rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] font-label-lg text-label-lg transition-colors cursor-pointer disabled:opacity-50 shadow-sm"
       >
         {status === "submitting" ? "Submitting Inquiry..." : "Request Private Walkthrough"}
       </button>

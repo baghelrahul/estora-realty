@@ -100,14 +100,14 @@ export function Header() {
 
           <Link
             href="/contact/"
-            className="hidden sm:inline-flex items-center justify-center font-label-lg text-label-lg px-4 lg:px-5 py-2.5 rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-surface-container transition-colors duration-200"
+            className="hidden sm:inline-flex items-center justify-center font-label-lg text-label-lg px-4 lg:px-5 py-2.5 rounded-lg border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] dark:hover:text-[#FFFFFF] transition-colors duration-200 font-medium"
           >
             Contact Us
           </Link>
 
           <Link
             href="/contact/?type=divestment"
-            className="inline-flex items-center justify-center font-label-lg text-label-lg px-4 sm:px-6 py-2.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] dark:bg-primary dark:text-on-primary dark:hover:bg-primary/90 transition-colors duration-200 font-semibold shadow-xs"
+            className="inline-flex items-center justify-center font-label-lg text-label-lg px-4 sm:px-6 py-2.5 rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] transition-colors duration-200 font-semibold shadow-xs"
           >
             List Your Property
           </Link>
@@ -180,14 +180,14 @@ export function Header() {
             <Link
               href="/contact/"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3 font-label-lg text-label-lg rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-surface-container transition-colors"
+              className="w-full text-center py-3 font-label-lg text-label-lg rounded-lg border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] dark:hover:text-[#FFFFFF] transition-colors font-medium"
             >
               Contact Us
             </Link>
             <Link
               href="/contact/?type=divestment"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3 font-label-lg text-label-lg rounded-lg bg-primary-container text-surface hover:bg-[#323A35] dark:bg-primary dark:text-on-primary dark:hover:bg-primary/90 transition-colors font-semibold shadow-xs"
+              className="w-full text-center py-3 font-label-lg text-label-lg rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] transition-colors font-semibold shadow-xs"
             >
               List Your Property
             </Link>

@@ -367,13 +367,13 @@ export default function AboutPage() {
             <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/contact/"
-                className="inline-flex items-center justify-center bg-primary-container text-surface font-label-lg text-label-lg px-8 py-4 rounded-lg hover:bg-[#323A35] transition-all duration-200 active:scale-95 shadow"
+                className="inline-flex items-center justify-center bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] font-semibold font-label-lg text-label-lg px-8 py-4 rounded-lg transition-all duration-200 active:scale-95 shadow"
               >
                 Schedule Private Advisory
               </Link>
               <Link
                 href="/properties/"
-                className="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-surface font-label-lg text-label-lg px-8 py-4 rounded-lg transition-colors duration-200"
+                className="inline-flex items-center justify-center border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] font-semibold font-label-lg text-label-lg px-8 py-4 rounded-lg transition-colors duration-200"
               >
                 Explore Our Collection
               </Link>

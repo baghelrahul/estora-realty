@@ -56,7 +56,7 @@ export function WishlistContent() {
             <div className="pt-2">
               <Link
                 href="/properties/"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary-container text-surface hover:bg-[#323A35] rounded-lg font-label-lg text-label-lg transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] rounded-lg font-label-lg text-label-lg transition-colors shadow-sm"
               >
                 <span>Browse Curated Portfolio</span>
                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

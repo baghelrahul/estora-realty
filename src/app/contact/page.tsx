@@ -170,11 +170,11 @@ export default function ContactPage() {
                   className="w-full h-full object-cover grayscale opacity-80"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-primary-container text-surface px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 border border-surface/20">
-                    <span className="material-symbols-outlined text-sm text-secondary-fixed">
+                  <div className="bg-[#202522] text-[#FAF9F5] px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 border border-white/20">
+                    <span className="material-symbols-outlined text-sm text-[#E4C896]">
                       pin_drop
                     </span>
-                    <span className="text-label-caps font-label-caps uppercase tracking-wider text-surface">
+                    <span className="text-label-caps font-label-caps uppercase tracking-wider text-[#FAF9F5]">
                       Estora Flagship
                     </span>
                   </div>
@@ -206,19 +206,19 @@ export default function ContactPage() {
             </div>
 
             {/* Instant WhatsApp Advisory Banner */}
-            <div className="bg-primary-container text-surface rounded-xl p-6 relative overflow-hidden">
+            <div className="bg-[#202522] dark:bg-[#181D1A] border border-[#2F3632] rounded-xl p-6 relative overflow-hidden">
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-lg bg-surface/10 flex items-center justify-center flex-shrink-0 text-secondary-fixed">
+                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 text-[#E4C896]">
                   <span className="material-symbols-outlined text-2xl">chat</span>
                 </div>
                 <div className="space-y-2">
-                  <span className="text-label-caps font-label-caps uppercase tracking-wider text-secondary-fixed block">
+                  <span className="text-label-caps font-label-caps uppercase tracking-wider text-[#E4C896] block">
                     Direct Channel
                   </span>
-                  <h4 className="text-headline-sm font-headline-sm text-surface">
+                  <h4 className="text-headline-sm font-headline-sm text-[#FAF9F5]">
                     Instant WhatsApp Advisory
                   </h4>
-                  <p className="text-body-sm font-body-sm text-on-primary-container leading-relaxed">
+                  <p className="text-body-sm font-body-sm text-[#D1D7D0] leading-relaxed">
                     Connect directly with an available partner for rapid off-market inquiries and real-time portfolio updates.
                   </p>
                   <div className="pt-2">
@@ -226,7 +226,7 @@ export default function ContactPage() {
                       href="https://wa.me/13108924410"
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center bg-surface text-primary hover:bg-surface-bright text-label-lg font-label-lg px-4 py-2 rounded-lg transition-colors duration-200"
+                      className="inline-flex items-center bg-[#FAF9F5] text-[#111412] hover:bg-white text-label-lg font-label-lg font-semibold px-4 py-2 rounded-lg transition-colors duration-200"
                     >
                       <span>Chat on WhatsApp</span>
                       <span className="material-symbols-outlined ml-2 text-sm">arrow_outward</span>

@@ -33,8 +33,8 @@ export function HomeSearchForm() {
             onClick={() => setPurpose("Buy")}
             className={`px-5 py-2 font-label-lg text-label-lg rounded-lg transition-colors ${
               purpose === "Buy"
-                ? "bg-primary-container text-surface shadow-xs"
-                : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
+                ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs font-semibold"
+                : "text-on-surface-variant hover:text-primary hover:bg-surface-container font-medium"
             }`}
           >
             Buy
@@ -42,10 +42,10 @@ export function HomeSearchForm() {
           <button
             type="button"
             onClick={() => setPurpose("Rent")}
-            className={`px-5 py-2 font-label-lg text-label-lg rounded-lg transition-colors ${
+            className={`px-5 py-2 font-label-lg text-label-lg rounded-lg transition-colors cursor-pointer ${
               purpose === "Rent"
-                ? "bg-primary-container text-surface shadow-xs"
-                : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
+                ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs font-semibold"
+                : "text-on-surface-variant hover:text-primary hover:bg-surface-container font-medium"
             }`}
           >
             Rent
@@ -169,7 +169,7 @@ export function HomeSearchForm() {
           <div>
             <button
               type="submit"
-              className="w-full h-12 bg-secondary text-surface hover:bg-secondary/90 transition-colors duration-200 rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
+              className="w-full h-12 bg-secondary text-white hover:bg-secondary/90 transition-colors duration-200 rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95 font-semibold"
             >
               <span className="material-symbols-outlined text-[20px]">search</span>
               <span>Search Properties</span>

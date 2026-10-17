@@ -77,35 +77,35 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section className="relative pt-6 pb-20 lg:pt-12 lg:pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="relative rounded-xl overflow-hidden min-h-[560px] lg:min-h-[640px] flex items-end p-8 lg:p-16 border border-outline-variant/40">
+          <div className="relative rounded-xl overflow-hidden min-h-[560px] lg:min-h-[640px] flex items-end p-8 lg:p-16 border border-outline-variant/40 shadow-sm">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuDuxxX_jfbOvkV94JdhdHaXS6Gtqk24MhHwkWBxQRW6LpbZL1Fb4AWCJ4yrafvzO6EHj6YxET2FSE2S6vGsxJFWyYimjvZXX1JMN20TcIyFPSbNQt0D9OH1CdrS97pn9H2DyULSXCNtiP0L-OrAW4bIyoWGOCEAtjbiyL2Of6jdoymrsBnrCqYz0s2qo7JOLCKkyuW5zQ158DUiWMlGvTHLXkHnBuh3kc0wOgNMRsPGkSZFdTpfvSvG')`,
+                backgroundImage: `url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=85')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/45 to-transparent" />
-            <div className="relative z-10 max-w-3xl text-surface">
-              <span className="inline-block text-label-caps font-label-caps tracking-widest uppercase text-secondary-fixed mb-4 px-3 py-1 bg-primary-container/60 backdrop-blur-sm rounded border border-outline-variant/20">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/25" />
+            <div className="relative z-10 max-w-3xl text-white">
+              <span className="inline-block text-label-caps font-label-caps tracking-widest uppercase text-white/90 mb-4 px-3 py-1 bg-black/40 backdrop-blur-md rounded border border-white/20">
                 Curated Architectural Living
               </span>
-              <h1 className="text-display-hero-mobile lg:text-display-hero font-display-hero mb-6 text-surface tracking-tight leading-none">
+              <h1 className="text-display-hero-mobile lg:text-display-hero font-display-hero mb-6 text-white tracking-tight leading-none drop-shadow-sm">
                 Find a Place That Feels Like Home.
               </h1>
-              <p className="text-body-md lg:text-body-lg font-body-lg text-surface-container-low max-w-xl mb-8 leading-relaxed">
+              <p className="text-body-md lg:text-body-lg font-body-lg text-white/85 max-w-xl mb-8 leading-relaxed">
                 Curating exceptional residences, timeless mid-century estates, and modern waterfront sanctuaries for discerning collectors and individuals worldwide.
               </p>
               <div className="flex flex-wrap items-center gap-4">
                 <Link
                   href="/properties/"
-                  className="font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-surface text-primary hover:bg-surface-container transition-colors duration-200 inline-flex items-center gap-2 shadow-sm"
+                  className="font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-white text-[#111412] hover:bg-white/90 transition-colors duration-200 inline-flex items-center gap-2 font-semibold shadow-sm"
                 >
                   <span>Explore Properties</span>
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </Link>
                 <Link
                   href="/contact/"
-                  className="font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-transparent border border-surface text-surface hover:bg-surface hover:text-primary transition-colors duration-200"
+                  className="font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-black/30 backdrop-blur-sm border border-white/60 text-white hover:bg-white hover:text-[#111412] transition-colors duration-200 font-medium"
                 >
                   Contact Us
                 </Link>
@@ -272,7 +272,7 @@ export default function HomePage() {
 
             <Link
               href="/about/"
-              className="inline-flex items-center justify-center font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] transition-colors duration-200"
+              className="inline-flex items-center justify-center font-label-lg text-label-lg px-7 py-3.5 rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] font-semibold transition-colors duration-200"
             >
               Discover Our Story
             </Link>
@@ -420,13 +420,13 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/properties/"
-                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] dark:bg-primary dark:text-on-primary dark:hover:bg-primary/90 transition-colors duration-200 font-semibold shadow-sm"
+                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] transition-colors duration-200 font-semibold shadow-sm"
               >
                 Let’s Find Your Property
               </Link>
               <Link
                 href="/contact/"
-                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-primary-container text-primary hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-surface-container transition-colors duration-200"
+                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] dark:hover:text-[#FFFFFF] transition-colors duration-200 font-medium"
               >
                 Schedule Private Consultation
               </Link>

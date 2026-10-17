@@ -16,13 +16,13 @@ export default function NotFound() {
         <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/"
-            className="px-6 py-3 rounded-lg bg-primary text-surface hover:bg-[#323A35] font-label-lg text-label-lg transition-colors"
+            className="px-6 py-3 rounded-lg bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] font-label-lg text-label-lg transition-colors"
           >
             Return to Homepage
           </Link>
           <Link
             href="/properties/"
-            className="px-6 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-surface font-label-lg text-label-lg transition-colors"
+            className="px-6 py-3 rounded-lg border border-[#202522] text-[#202522] hover:bg-[#202522] hover:text-[#FAF9F5] dark:border-[#4A574E] dark:text-[#F2F1EC] dark:hover:bg-[#202622] font-label-lg text-label-lg transition-colors"
           >
             Explore Available Portfolio
           </Link>

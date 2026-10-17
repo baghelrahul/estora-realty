@@ -349,7 +349,7 @@ export function PropertiesMarketplace() {
                 }}
                 className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
                   purpose === "All"
-                    ? "bg-primary-container text-surface shadow-xs font-semibold"
+                    ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs font-semibold"
                     : "text-on-surface-variant hover:text-primary"
                 }`}
               >
@@ -363,7 +363,7 @@ export function PropertiesMarketplace() {
                 }}
                 className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
                   purpose === "Buy"
-                    ? "bg-primary-container text-surface shadow-xs font-semibold"
+                    ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs font-semibold"
                     : "text-on-surface-variant hover:text-primary"
                 }`}
               >
@@ -377,7 +377,7 @@ export function PropertiesMarketplace() {
                 }}
                 className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
                   purpose === "Rent"
-                    ? "bg-primary-container text-surface shadow-xs font-semibold"
+                    ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs font-semibold"
                     : "text-on-surface-variant hover:text-primary"
                 }`}
               >
@@ -484,7 +484,7 @@ export function PropertiesMarketplace() {
                   }}
                   className={`px-3 py-1.5 rounded-lg border text-body-sm font-body-sm transition-all cursor-pointer ${
                     bedsFilter === b
-                      ? "bg-primary-container text-surface border-primary-container font-semibold"
+                      ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] border-transparent font-semibold shadow-xs"
                       : "border-outline-variant text-on-surface-variant hover:border-primary"
                   }`}
                 >
@@ -510,7 +510,7 @@ export function PropertiesMarketplace() {
                   }}
                   className={`py-1.5 rounded-lg border text-body-sm font-body-sm transition-all cursor-pointer ${
                     bathsFilter === b
-                      ? "bg-primary-container text-surface border-primary-container font-semibold"
+                      ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] border-transparent font-semibold shadow-xs"
                       : "border-outline-variant hover:border-primary text-on-surface"
                   }`}
                 >
@@ -623,7 +623,7 @@ export function PropertiesMarketplace() {
             <button
               type="button"
               onClick={() => setMobileFilterOpen(false)}
-              className="w-full bg-primary-container hover:bg-[#323A35] text-surface py-3 rounded-lg text-label-lg font-label-lg transition-all duration-200 active:scale-95 shadow-sm cursor-pointer"
+              className="w-full bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] py-3 rounded-lg text-label-lg font-label-lg transition-all duration-200 active:scale-95 shadow-sm cursor-pointer font-semibold"
             >
               Apply Filters ({filteredProperties.length})
             </button>
@@ -716,7 +716,7 @@ export function PropertiesMarketplace() {
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="inline-flex items-center px-6 py-2.5 bg-primary-container text-surface rounded-lg font-label-lg text-label-lg hover:bg-[#323A35] transition-colors cursor-pointer"
+                className="inline-flex items-center px-6 py-2.5 bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] rounded-lg font-label-lg text-label-lg transition-colors cursor-pointer"
               >
                 Reset All Filters
               </button>
@@ -792,7 +792,7 @@ export function PropertiesMarketplace() {
                         </div>
                         <Link
                           href={`/properties/${prop.slug}/`}
-                          className="inline-flex items-center gap-1.5 px-6 py-2 bg-primary-container text-surface hover:bg-[#323A35] rounded-lg text-label-lg font-label-lg transition-colors"
+                          className="inline-flex items-center gap-1.5 px-6 py-2 bg-[#202522] text-[#FAF9F5] hover:bg-[#323A35] dark:bg-[#F2F1EC] dark:text-[#111412] dark:hover:bg-[#FFFFFF] rounded-lg text-label-lg font-label-lg transition-colors"
                         >
                           <span>View Details</span>
                           <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -837,7 +837,7 @@ export function PropertiesMarketplace() {
                       onClick={() => handlePageChange(pageNum)}
                       className={`w-9 h-9 rounded-lg flex items-center justify-center text-body-sm font-semibold transition-all cursor-pointer ${
                         isActive
-                          ? "bg-primary-container text-surface shadow-xs"
+                          ? "bg-[#202522] text-[#FAF9F5] dark:bg-[#F2F1EC] dark:text-[#111412] shadow-xs"
                           : "text-on-surface-variant hover:bg-surface-container"
                       }`}
                     >
