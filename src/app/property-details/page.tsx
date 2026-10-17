@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { WalkthroughForm } from "@/components/sections/walkthrough-form";
+import { PropertyDetailActions } from "@/components/sections/property-detail-actions";
 
 export const metadata: Metadata = {
   title: "The Bel-Air Glass Pavilion — 1048 Stradella Road",
@@ -111,13 +112,16 @@ export default function PropertyDetailsPage() {
             </p>
           </div>
 
-          <div className="flex sm:flex-col items-start sm:items-end justify-between sm:justify-center gap-2">
-            <span className="text-display-hero-mobile sm:text-headline-xl font-headline-xl font-bold text-primary">
-              $8,750,000
-            </span>
-            <span className="text-label-caps font-label-caps text-outline uppercase tracking-wider">
-              EST-94021 · Sole Agency
-            </span>
+          <div className="flex flex-col items-start sm:items-end justify-between sm:justify-center gap-3">
+            <div className="text-left sm:text-right">
+              <span className="text-display-hero-mobile sm:text-headline-xl font-headline-xl font-bold text-primary block">
+                $8,750,000
+              </span>
+              <span className="text-label-caps font-label-caps text-outline uppercase tracking-wider block mt-0.5">
+                EST-94021 · Sole Agency
+              </span>
+            </div>
+            <PropertyDetailActions propertyId="EST-94021" propertyTitle="The Bel-Air Glass Pavilion" />
           </div>
         </div>
       </section>

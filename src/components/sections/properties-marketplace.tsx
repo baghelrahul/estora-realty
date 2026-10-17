@@ -1,81 +1,265 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { properties, Property } from "@/data/properties";
+import { PropertyCard } from "@/components/sections/property-card";
+import { useWishlist } from "@/context/wishlist-context";
+
+const PAGE_SIZE = 6;
 
 export function PropertiesMarketplace() {
   const searchParams = useSearchParams();
-  const initialPurpose = searchParams.get("purpose") === "Rent" ? "Rent" : "Buy";
-  const initialType = searchParams.get("type") || "all";
+  const { isWishlisted, toggleWishlist } = useWishlist();
 
-  const [purpose, setPurpose] = useState<"Buy" | "Rent">(initialPurpose);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>(
-    initialType !== "all" ? [initialType] : ["Apartment", "Villa", "Independent House"]
+  // Read URL params
+  const paramPurpose = searchParams.get("purpose");
+  const paramLocation = searchParams.get("location") || "";
+  const paramType = searchParams.get("type") || "all";
+  const paramPrice = searchParams.get("price") || "all";
+  const paramBeds = searchParams.get("beds");
+
+  // State
+  const [purpose, setPurpose] = useState<"All" | "Buy" | "Rent">(
+    paramPurpose === "Rent" ? "Rent" : paramPurpose === "Buy" ? "Buy" : "All"
   );
+  const [searchLocation, setSearchLocation] = useState<string>(paramLocation);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>(
+    paramType !== "all" ? [paramType] : []
+  );
+  const [minPrice, setMinPrice] = useState<string>(
+    paramPrice === "1.5-3" ? "1500000" : paramPrice === "3-7.5" ? "3000000" : paramPrice === "7.5-15" ? "7500000" : paramPrice === "15+" ? "15000000" : "0"
+  );
+  const [maxPrice, setMaxPrice] = useState<string>(
+    paramPrice === "1.5-3" ? "3000000" : paramPrice === "3-7.5" ? "7500000" : paramPrice === "7.5-15" ? "15000000" : "50000000"
+  );
+  const [bedsFilter, setBedsFilter] = useState<string>(
+    paramBeds ? `${paramBeds}+` : "Any"
+  );
+  const [bathsFilter, setBathsFilter] = useState<string>("Any");
+  const [minArea, setMinArea] = useState<string>("");
+  const [maxArea, setMaxArea] = useState<string>("");
+  const [furnishing, setFurnishing] = useState<string>("All");
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [priceSort, setPriceSort] = useState("Recommended");
-  const [bedsFilter, setBedsFilter] = useState("Any");
-  const [bathsFilter, setBathsFilter] = useState("Any");
-  const [minArea, setMinArea] = useState<string>("3500");
-  const [maxArea, setMaxArea] = useState<string>("12000");
   const [isListView, setIsListView] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Property types list with counts
-  const propertyTypes = [
-    { label: "Apartment", count: 48 },
-    { label: "Villa", count: 36 },
-    { label: "Independent House", count: 22 },
-    { label: "Plot / Land", count: 14 },
-    { label: "Commercial", count: 8 },
-  ];
-
-  const handleTypeToggle = (type: string) => {
-    if (selectedTypes.includes(type)) {
-      setSelectedTypes(selectedTypes.filter((t) => t !== type));
-    } else {
-      setSelectedTypes([...selectedTypes, type]);
+  // Synchronize when URL search params change
+  useEffect(() => {
+    if (paramPurpose === "Rent" || paramPurpose === "Buy") {
+      setPurpose(paramPurpose);
     }
+    if (paramLocation) {
+      setSearchLocation(paramLocation);
+    }
+    if (paramType && paramType !== "all") {
+      setSelectedTypes([paramType]);
+    }
+    if (paramBeds) {
+      setBedsFilter(`${paramBeds}+`);
+    }
+    if (paramPrice && paramPrice !== "all") {
+      if (paramPrice === "1.5-3") {
+        setMinPrice("1500000");
+        setMaxPrice("3000000");
+      } else if (paramPrice === "3-7.5") {
+        setMinPrice("3000000");
+        setMaxPrice("7500000");
+      } else if (paramPrice === "7.5-15") {
+        setMinPrice("7500000");
+        setMaxPrice("15000000");
+      } else if (paramPrice === "15+") {
+        setMinPrice("15000000");
+        setMaxPrice("50000000");
+      } else if (paramPrice === "under-25k") {
+        setMinPrice("0");
+        setMaxPrice("25000");
+      } else if (paramPrice === "25k-50k") {
+        setMinPrice("25000");
+        setMaxPrice("50000");
+      } else if (paramPrice === "50k+") {
+        setMinPrice("50000");
+        setMaxPrice("200000");
+      }
+    }
+    setCurrentPage(1);
+  }, [paramPurpose, paramLocation, paramType, paramPrice, paramBeds]);
+
+  // Defined typologies with live counts from data
+  const typologyDefinitions = useMemo(() => [
+    { label: "Apartment", match: ["Apartment", "Urban Penthouse"] },
+    { label: "Villa", match: ["Modern Villa", "Restored Stone Villa"] },
+    { label: "Architectural Estate", match: ["Architectural Estate"] },
+    { label: "Independent House", match: ["Independent House"] },
+    { label: "Plot / Land", match: ["Plot / Land"] },
+    { label: "Commercial", match: ["Commercial"] },
+  ], []);
+
+  const typeCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    typologyDefinitions.forEach((def) => {
+      counts[def.label] = properties.filter((p) =>
+        def.match.some((m) => p.typology.toLowerCase().includes(m.toLowerCase()))
+      ).length;
+    });
+    return counts;
+  }, [typologyDefinitions]);
+
+  const handleTypeToggle = (label: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(label) ? prev.filter((t) => t !== label) : [...prev, label]
+    );
+    setCurrentPage(1);
+  };
+
+  const handleAmenityToggle = (amenity: string) => {
+    setSelectedAmenities((prev) =>
+      prev.includes(amenity)
+        ? prev.filter((a) => a !== amenity)
+        : [...prev, amenity]
+    );
+    setCurrentPage(1);
   };
 
   const handleClearAll = () => {
+    setPurpose("All");
+    setSearchLocation("");
     setSelectedTypes([]);
+    setMinPrice("0");
+    setMaxPrice("50000000");
     setBedsFilter("Any");
     setBathsFilter("Any");
     setMinArea("");
     setMaxArea("");
+    setFurnishing("All");
+    setSelectedAmenities([]);
     setPriceSort("Recommended");
+    setCurrentPage(1);
   };
 
-  // Filtered & Sorted Properties
+  // Filter & Sort
   const filteredProperties = useMemo(() => {
     let result = [...properties];
 
-    if (selectedTypes.length > 0) {
-      result = result.filter((p) =>
-        selectedTypes.some((t) => p.typology.toLowerCase().includes(t.toLowerCase()))
+    // Purpose filter
+    if (purpose !== "All") {
+      result = result.filter((p) => p.purpose === purpose);
+    }
+
+    // Search query (location, title, address)
+    if (searchLocation.trim()) {
+      const q = searchLocation.toLowerCase().trim();
+      result = result.filter(
+        (p) =>
+          p.location.toLowerCase().includes(q) ||
+          p.title.toLowerCase().includes(q) ||
+          p.address.toLowerCase().includes(q) ||
+          p.typology.toLowerCase().includes(q)
       );
     }
 
+    // Typology filter
+    if (selectedTypes.length > 0) {
+      result = result.filter((p) => {
+        return selectedTypes.some((selected) => {
+          const def = typologyDefinitions.find((d) => d.label === selected);
+          if (def) {
+            return def.match.some((m) =>
+              p.typology.toLowerCase().includes(m.toLowerCase())
+            );
+          }
+          return p.typology.toLowerCase().includes(selected.toLowerCase());
+        });
+      });
+    }
+
+    // Price range
+    const minP = parseFloat(minPrice) || 0;
+    const maxP = parseFloat(maxPrice) || 999999999;
+    result = result.filter((p) => p.price >= minP && p.price <= maxP);
+
+    // Beds filter
     if (bedsFilter !== "Any") {
       const minBeds = parseInt(bedsFilter.replace("+", ""), 10);
       result = result.filter((p) => p.beds >= minBeds);
     }
 
+    // Baths filter
     if (bathsFilter !== "Any") {
       const minBaths = parseInt(bathsFilter.replace("+", ""), 10);
       result = result.filter((p) => p.baths >= minBaths);
     }
 
+    // Area filters
+    if (minArea.trim()) {
+      const minA = parseInt(minArea, 10);
+      if (!isNaN(minA)) {
+        result = result.filter((p) => p.areaSqFt >= minA);
+      }
+    }
+    if (maxArea.trim()) {
+      const maxA = parseInt(maxArea, 10);
+      if (!isNaN(maxA)) {
+        result = result.filter((p) => p.areaSqFt <= maxA);
+      }
+    }
+
+    // Furnishing
+    if (furnishing !== "All") {
+      result = result.filter((p) => p.furnishing === furnishing);
+    }
+
+    // Amenities
+    if (selectedAmenities.length > 0) {
+      result = result.filter((p) =>
+        selectedAmenities.every((amenity) => p.amenities?.includes(amenity))
+      );
+    }
+
+    // Sorting
     if (priceSort === "Price: Low to High") {
       result.sort((a, b) => a.price - b.price);
     } else if (priceSort === "Price: High to Low") {
       result.sort((a, b) => b.price - a.price);
+    } else if (priceSort === "Newest") {
+      result.sort((a, b) => (b.builtYear || "").localeCompare(a.builtYear || ""));
     }
 
     return result;
-  }, [selectedTypes, bedsFilter, bathsFilter, priceSort]);
+  }, [
+    purpose,
+    searchLocation,
+    selectedTypes,
+    minPrice,
+    maxPrice,
+    bedsFilter,
+    bathsFilter,
+    minArea,
+    maxArea,
+    furnishing,
+    selectedAmenities,
+    priceSort,
+    typologyDefinitions,
+  ]);
+
+  // Pagination calculation
+  const totalPages = Math.max(1, Math.ceil(filteredProperties.length / PAGE_SIZE));
+  const activePage = Math.min(currentPage, totalPages);
+  const startIndex = (activePage - 1) * PAGE_SIZE;
+  const paginatedProperties = filteredProperties.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 380, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="w-full">
@@ -84,7 +268,7 @@ export function PropertiesMarketplace() {
         <button
           type="button"
           onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-          className="inline-flex items-center gap-2 text-label-lg font-label-lg text-primary font-medium"
+          className="inline-flex items-center gap-2 text-label-lg font-label-lg text-primary font-medium cursor-pointer"
         >
           <span className="material-symbols-outlined text-lg">filter_list</span>
           <span>{mobileFilterOpen ? "Hide Filters" : "Filter Properties"}</span>
@@ -117,16 +301,67 @@ export function PropertiesMarketplace() {
             </button>
           </div>
 
+          {/* Search By Location / Keyword */}
+          <div>
+            <label className="block text-label-caps font-label-caps uppercase text-outline mb-2">
+              Search Location / Keyword
+            </label>
+            <div className="relative flex items-center">
+              <span className="material-symbols-outlined absolute left-3 text-outline text-[18px]">
+                search
+              </span>
+              <input
+                type="text"
+                value={searchLocation}
+                onChange={(e) => {
+                  setSearchLocation(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="City, neighborhood, title..."
+                className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm pl-9 pr-8 py-2 text-on-surface focus:border-primary focus:ring-0"
+              />
+              {searchLocation && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchLocation("");
+                    setCurrentPage(1);
+                  }}
+                  className="absolute right-2.5 text-outline hover:text-primary"
+                >
+                  <span className="material-symbols-outlined text-base">close</span>
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Property Purpose */}
           <div>
             <label className="block text-label-caps font-label-caps uppercase text-outline mb-2.5">
               Property Purpose
             </label>
-            <div className="grid grid-cols-2 p-1 bg-surface-container rounded-lg border border-outline-variant/40">
+            <div className="grid grid-cols-3 p-1 bg-surface-container rounded-lg border border-outline-variant/40">
               <button
                 type="button"
-                onClick={() => setPurpose("Buy")}
-                className={`py-1.5 text-center text-label-lg font-label-lg rounded transition-all cursor-pointer ${
+                onClick={() => {
+                  setPurpose("All");
+                  setCurrentPage(1);
+                }}
+                className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
+                  purpose === "All"
+                    ? "bg-primary-container text-surface shadow-xs font-semibold"
+                    : "text-on-surface-variant hover:text-primary"
+                }`}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPurpose("Buy");
+                  setCurrentPage(1);
+                }}
+                className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
                   purpose === "Buy"
                     ? "bg-primary-container text-surface shadow-xs font-semibold"
                     : "text-on-surface-variant hover:text-primary"
@@ -136,8 +371,11 @@ export function PropertiesMarketplace() {
               </button>
               <button
                 type="button"
-                onClick={() => setPurpose("Rent")}
-                className={`py-1.5 text-center text-label-lg font-label-lg rounded transition-all cursor-pointer ${
+                onClick={() => {
+                  setPurpose("Rent");
+                  setCurrentPage(1);
+                }}
+                className={`py-1.5 text-center text-xs font-label-lg rounded transition-all cursor-pointer ${
                   purpose === "Rent"
                     ? "bg-primary-container text-surface shadow-xs font-semibold"
                     : "text-on-surface-variant hover:text-primary"
@@ -148,14 +386,15 @@ export function PropertiesMarketplace() {
             </div>
           </div>
 
-          {/* Property Type */}
+          {/* Property Typology */}
           <div>
             <label className="block text-label-caps font-label-caps uppercase text-outline mb-3">
-              Property Type
+              Property Typology
             </label>
             <div className="space-y-2">
-              {propertyTypes.map((pt) => {
+              {typologyDefinitions.map((pt) => {
                 const checked = selectedTypes.includes(pt.label);
+                const count = typeCounts[pt.label] || 0;
                 return (
                   <label
                     key={pt.label}
@@ -170,7 +409,7 @@ export function PropertiesMarketplace() {
                       />
                       {pt.label}
                     </span>
-                    <span className="text-outline text-xs">{pt.count}</span>
+                    <span className="text-outline text-xs">{count}</span>
                   </label>
                 );
               })}
@@ -181,38 +420,50 @@ export function PropertiesMarketplace() {
           <div className="pt-1 border-t border-outline-variant/30">
             <div className="flex items-center justify-between mb-2.5">
               <label className="text-label-caps font-label-caps uppercase text-outline">
-                Price Range
+                Price Filter
               </label>
-              <span className="text-xs font-medium text-secondary">$1.0M – $25.0M+</span>
+              <span className="text-xs font-medium text-secondary">
+                {minPrice === "0" && maxPrice === "50000000"
+                  ? "All Prices"
+                  : `$${(parseInt(minPrice, 10) / 1000000).toFixed(1)}M – $${(parseInt(maxPrice, 10) / 1000000).toFixed(1)}M`}
+              </span>
             </div>
             <div className="grid grid-cols-2 gap-2 mb-3">
               <div>
                 <span className="text-[0.65rem] text-outline block mb-1">Min Price</span>
-                <select className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2 py-1.5 text-on-surface focus:border-primary focus:ring-0">
-                  <option>$1,000,000</option>
-                  <option>$2,500,000</option>
-                  <option>$5,000,000</option>
-                  <option>$7,500,000</option>
+                <select
+                  value={minPrice}
+                  onChange={(e) => {
+                    setMinPrice(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2 py-1.5 text-on-surface focus:border-primary focus:ring-0"
+                >
+                  <option value="0">Min (Any)</option>
+                  <option value="1000000">$1,000,000</option>
+                  <option value="2500000">$2,500,000</option>
+                  <option value="5000000">$5,000,000</option>
+                  <option value="7500000">$7,500,000</option>
+                  <option value="10000000">$10,000,000</option>
+                  <option value="15000000">$15,000,000</option>
                 </select>
               </div>
               <div>
                 <span className="text-[0.65rem] text-outline block mb-1">Max Price</span>
-                <select className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2 py-1.5 text-on-surface focus:border-primary focus:ring-0">
-                  <option>$10,000,000</option>
-                  <option defaultValue="$25,000,000+">$25,000,000+</option>
-                  <option>$50,000,000+</option>
+                <select
+                  value={maxPrice}
+                  onChange={(e) => {
+                    setMaxPrice(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2 py-1.5 text-on-surface focus:border-primary focus:ring-0"
+                >
+                  <option value="5000000">$5,000,000</option>
+                  <option value="10000000">$10,000,000</option>
+                  <option value="15000000">$15,000,000</option>
+                  <option value="25000000">$25,000,000</option>
+                  <option value="50000000">$50,000,000+</option>
                 </select>
-              </div>
-            </div>
-            {/* Visual indicator slider bar */}
-            <div className="relative pt-2 pb-1">
-              <div className="h-1 bg-surface-container-high rounded-full overflow-hidden">
-                <div className="h-full bg-primary-container w-3/4 ml-4" />
-              </div>
-              <div className="flex justify-between items-center mt-2 text-[0.7rem] text-outline font-label-caps">
-                <span>$1M</span>
-                <span>$12M</span>
-                <span>$25M+</span>
               </div>
             </div>
           </div>
@@ -223,11 +474,14 @@ export function PropertiesMarketplace() {
               Bedrooms
             </label>
             <div className="flex flex-wrap gap-1.5">
-              {["Any", "1+", "2+", "3+", "4+"].map((b) => (
+              {["Any", "1+", "2+", "3+", "4+", "5+"].map((b) => (
                 <button
                   key={b}
                   type="button"
-                  onClick={() => setBedsFilter(b)}
+                  onClick={() => {
+                    setBedsFilter(b);
+                    setCurrentPage(1);
+                  }}
                   className={`px-3 py-1.5 rounded-lg border text-body-sm font-body-sm transition-all cursor-pointer ${
                     bedsFilter === b
                       ? "bg-primary-container text-surface border-primary-container font-semibold"
@@ -246,11 +500,14 @@ export function PropertiesMarketplace() {
               Bathrooms
             </label>
             <div className="grid grid-cols-4 gap-1.5 text-center">
-              {["1+", "2+", "3+", "4+"].map((b) => (
+              {["Any", "2+", "4+", "6+"].map((b) => (
                 <button
                   key={b}
                   type="button"
-                  onClick={() => setBathsFilter(bathsFilter === b ? "Any" : b)}
+                  onClick={() => {
+                    setBathsFilter(b);
+                    setCurrentPage(1);
+                  }}
                   className={`py-1.5 rounded-lg border text-body-sm font-body-sm transition-all cursor-pointer ${
                     bathsFilter === b
                       ? "bg-primary-container text-surface border-primary-container font-semibold"
@@ -278,7 +535,10 @@ export function PropertiesMarketplace() {
                 <input
                   type="number"
                   value={minArea}
-                  onChange={(e) => setMinArea(e.target.value)}
+                  onChange={(e) => {
+                    setMinArea(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Min Area"
                   className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2.5 py-1.5 text-on-surface focus:border-primary focus:ring-0"
                 />
@@ -290,7 +550,10 @@ export function PropertiesMarketplace() {
                 <input
                   type="number"
                   value={maxArea}
-                  onChange={(e) => setMaxArea(e.target.value)}
+                  onChange={(e) => {
+                    setMaxArea(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Max Area"
                   className="w-full bg-surface border border-outline-variant rounded-lg text-body-sm font-body-sm px-2.5 py-1.5 text-on-surface focus:border-primary focus:ring-0"
                 />
@@ -307,12 +570,16 @@ export function PropertiesMarketplace() {
               Furnishing
             </label>
             <div className="space-y-2">
-              {["Fully Furnished", "Semi-Furnished", "Unfurnished"].map((f, i) => (
+              {["All", "Fully Furnished", "Semi-Furnished", "Unfurnished"].map((f) => (
                 <label key={f} className="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
                   <input
                     type="radio"
                     name="furnishing"
-                    defaultChecked={i === 0}
+                    checked={furnishing === f}
+                    onChange={() => {
+                      setFurnishing(f);
+                      setCurrentPage(1);
+                    }}
                     className="text-primary-container border-outline-variant focus:ring-primary-container cursor-pointer"
                   />
                   {f}
@@ -334,16 +601,20 @@ export function PropertiesMarketplace() {
                 "Swimming Pool",
                 "Private Gym",
                 "24/7 Security",
-              ].map((amenity, i) => (
-                <label key={amenity} className="flex items-center gap-2.5 text-body-sm font-body-sm text-on-surface cursor-pointer">
-                  <input
-                    type="checkbox"
-                    defaultChecked={i !== 4}
-                    className="w-4 h-4 rounded text-primary-container border-outline-variant focus:ring-primary-container cursor-pointer"
-                  />
-                  {amenity}
-                </label>
-              ))}
+              ].map((amenity) => {
+                const checked = selectedAmenities.includes(amenity);
+                return (
+                  <label key={amenity} className="flex items-center gap-2.5 text-body-sm font-body-sm text-on-surface cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => handleAmenityToggle(amenity)}
+                      className="w-4 h-4 rounded text-primary-container border-outline-variant focus:ring-primary-container cursor-pointer"
+                    />
+                    {amenity}
+                  </label>
+                );
+              })}
             </div>
           </div>
 
@@ -354,7 +625,7 @@ export function PropertiesMarketplace() {
               onClick={() => setMobileFilterOpen(false)}
               className="w-full bg-primary-container hover:bg-[#323A35] text-surface py-3 rounded-lg text-label-lg font-label-lg transition-all duration-200 active:scale-95 shadow-sm cursor-pointer"
             >
-              Apply Filters
+              Apply Filters ({filteredProperties.length})
             </button>
             <button
               type="button"
@@ -377,7 +648,10 @@ export function PropertiesMarketplace() {
                 Properties for You
               </h2>
               <p className="text-body-sm font-body-sm text-on-surface-variant">
-                {filteredProperties.length} curated {filteredProperties.length === 1 ? "residence" : "residences"} found
+                Showing {filteredProperties.length === 0 ? 0 : startIndex + 1}–
+                {Math.min(startIndex + PAGE_SIZE, filteredProperties.length)} of{" "}
+                {filteredProperties.length} curated{" "}
+                {filteredProperties.length === 1 ? "residence" : "residences"}
               </p>
             </div>
 
@@ -404,7 +678,7 @@ export function PropertiesMarketplace() {
                 <button
                   type="button"
                   onClick={() => setIsListView(false)}
-                  className={`p-1 rounded transition-colors ${
+                  className={`p-1 rounded transition-colors cursor-pointer ${
                     !isListView
                       ? "bg-surface-container-lowest text-primary shadow-xs"
                       : "text-outline hover:text-primary"
@@ -416,7 +690,7 @@ export function PropertiesMarketplace() {
                 <button
                   type="button"
                   onClick={() => setIsListView(true)}
-                  className={`p-1 rounded transition-colors ${
+                  className={`p-1 rounded transition-colors cursor-pointer ${
                     isListView
                       ? "bg-surface-container-lowest text-primary shadow-xs"
                       : "text-outline hover:text-primary"
@@ -442,188 +716,148 @@ export function PropertiesMarketplace() {
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="inline-flex items-center px-6 py-2.5 bg-primary-container text-surface rounded-lg font-label-lg text-label-lg hover:bg-[#323A35] transition-colors"
+                className="inline-flex items-center px-6 py-2.5 bg-primary-container text-surface rounded-lg font-label-lg text-label-lg hover:bg-[#323A35] transition-colors cursor-pointer"
               >
                 Reset All Filters
               </button>
             </div>
           ) : isListView ? (
             <div className="space-y-4">
-              {filteredProperties.map((prop) => (
-                <article
-                  key={prop.id}
-                  className="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden flex flex-col md:flex-row group hover:shadow-[0_8px_24px_-4px_rgba(32,37,34,0.08)] transition-all duration-300"
-                >
-                  <div className="relative md:w-72 lg:w-80 h-56 md:h-auto overflow-hidden bg-surface-container flex-shrink-0">
-                    <img
-                      src={prop.image}
-                      alt={prop.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                    />
-                    <span className="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded text-label-caps font-label-caps uppercase tracking-wider text-primary border border-outline-variant/40">
-                      {prop.tag}
-                    </span>
-                  </div>
-                  <div className="p-6 flex flex-col justify-between flex-grow">
-                    <div>
-                      <div className="flex items-baseline justify-between mb-2">
-                        <span className="text-headline-sm font-headline-sm text-primary font-bold">
-                          {prop.priceFormatted}
-                        </span>
-                        <span className="font-label-caps text-label-caps uppercase text-secondary">
-                          {prop.location}
-                        </span>
-                      </div>
-                      <h3 className="text-headline-sm font-headline-sm text-primary mb-1">
-                        {prop.title}
-                      </h3>
-                      <p className="font-body-sm font-body-sm text-outline mb-4">
-                        {prop.address}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-outline-variant/40">
-                      <div className="flex items-center gap-6 text-on-surface-variant font-body-sm text-body-sm">
-                        <span>{prop.beds} Beds</span>
-                        <span>{prop.baths} Baths</span>
-                        <span>{prop.area}</span>
-                      </div>
-                      <Link
-                        href="/property-details/"
-                        className="inline-flex items-center gap-1.5 px-6 py-2 bg-primary-container text-surface hover:bg-[#323A35] rounded-lg text-label-lg font-label-lg transition-colors"
-                      >
-                        <span>View Details</span>
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              {paginatedProperties.map((prop) => {
+                const wishlisted = isWishlisted(prop.id);
+                return (
+                  <article
+                    key={prop.id}
+                    className="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden flex flex-col md:flex-row group hover:shadow-[0_8px_24px_-4px_rgba(32,37,34,0.08)] transition-all duration-300"
+                  >
+                    <div className="relative md:w-72 lg:w-80 h-56 md:h-auto overflow-hidden bg-surface-container flex-shrink-0">
+                      <Link href={`/properties/${prop.slug}/`} className="block w-full h-full">
+                        <img
+                          src={prop.image}
+                          alt={prop.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                        />
                       </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProperties.map((prop) => (
-                <article
-                  key={prop.id}
-                  className="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden flex flex-col justify-between group hover:shadow-[0_8px_24px_-4px_rgba(32,37,34,0.08)] transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  <div>
-                    <div className="relative aspect-[16/10] overflow-hidden bg-surface-container">
-                      <img
-                        src={prop.image}
-                        alt={prop.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      />
                       <span className="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded text-label-caps font-label-caps uppercase tracking-wider text-primary border border-outline-variant/40">
                         {prop.tag}
                       </span>
-                      <div className="absolute bottom-3 left-3 bg-primary-container/90 backdrop-blur-md text-surface px-2.5 py-0.5 rounded text-[0.7rem] font-medium tracking-wide">
-                        {prop.typology}
-                      </div>
-                    </div>
-
-                    <div className="p-5 flex flex-col flex-grow">
-                      <div className="flex items-baseline justify-between mb-1.5">
-                        <span className="text-headline-sm font-headline-sm text-primary tracking-tight font-bold">
-                          {prop.priceFormatted}
+                      {/* Wishlist toggle button */}
+                      <button
+                        type="button"
+                        aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleWishlist(prop.id);
+                        }}
+                        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-primary hover:bg-surface transition-colors cursor-pointer shadow-sm z-10"
+                      >
+                        <span
+                          className={`material-symbols-outlined text-[18px] ${
+                            wishlisted ? "text-error" : "text-primary"
+                          }`}
+                          style={{
+                            fontVariationSettings: wishlisted ? "'FILL' 1" : "'FILL' 0",
+                          }}
+                        >
+                          favorite
                         </span>
+                      </button>
+                    </div>
+                    <div className="p-6 flex flex-col justify-between flex-grow">
+                      <div>
+                        <div className="flex items-baseline justify-between mb-2">
+                          <span className="text-headline-sm font-headline-sm text-primary font-bold">
+                            {prop.priceFormatted}
+                          </span>
+                          <span className="font-label-caps text-label-caps uppercase text-secondary">
+                            {prop.location}
+                          </span>
+                        </div>
+                        <Link href={`/properties/${prop.slug}/`}>
+                          <h3 className="text-headline-sm font-headline-sm text-primary mb-1 hover:text-secondary transition-colors">
+                            {prop.title}
+                          </h3>
+                        </Link>
+                        <p className="font-body-sm font-body-sm text-outline mb-4">
+                          {prop.address}
+                        </p>
                       </div>
-                      <h3 className="text-body-lg font-semibold text-primary mb-1 group-hover:text-secondary transition-colors">
-                        {prop.title}
-                      </h3>
-                      <p className="text-body-sm font-body-sm text-outline flex items-center gap-1 mb-4">
-                        <span className="material-symbols-outlined text-sm">location_on</span>
-                        {prop.location}
-                      </p>
 
-                      {/* Spec hairline row */}
-                      <div className="grid grid-cols-3 py-2.5 border-y border-outline-variant/40 text-center mb-4">
-                        <div>
-                          <span className="text-[0.6875rem] font-label-caps uppercase text-outline block">
-                            Beds
-                          </span>
-                          <span className="text-body-sm font-semibold text-primary">
-                            {prop.beds}
-                          </span>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-outline-variant/40">
+                        <div className="flex items-center gap-6 text-on-surface-variant font-body-sm text-body-sm">
+                          <span>{prop.beds > 0 ? `${prop.beds} Beds` : "Land"}</span>
+                          <span>{prop.baths > 0 ? `${prop.baths} Baths` : "Enclave"}</span>
+                          <span>{prop.area}</span>
                         </div>
-                        <div className="border-x border-outline-variant/40">
-                          <span className="text-[0.6875rem] font-label-caps uppercase text-outline block">
-                            Baths
-                          </span>
-                          <span className="text-body-sm font-semibold text-primary">
-                            {prop.baths}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-[0.6875rem] font-label-caps uppercase text-outline block">
-                            Area
-                          </span>
-                          <span className="text-body-sm font-semibold text-primary">
-                            {prop.area}
-                          </span>
-                        </div>
+                        <Link
+                          href={`/properties/${prop.slug}/`}
+                          className="inline-flex items-center gap-1.5 px-6 py-2 bg-primary-container text-surface hover:bg-[#323A35] rounded-lg text-label-lg font-label-lg transition-colors"
+                        >
+                          <span>View Details</span>
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </Link>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="p-5 pt-0">
-                    <Link
-                      href="/property-details/"
-                      className="block text-center w-full border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface py-2 rounded-lg text-label-lg font-label-lg transition-colors duration-200"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </article>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {paginatedProperties.map((prop) => (
+                <PropertyCard key={prop.id} property={prop} />
               ))}
             </div>
           )}
 
-          {/* Pagination Controls */}
-          <nav
-            aria-label="Pagination"
-            className="pt-8 flex items-center justify-between border-t border-outline-variant/40"
-          >
-            <button
-              type="button"
-              disabled
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-body-sm font-body-sm text-on-surface hover:text-secondary transition-colors disabled:opacity-40"
+          {/* Functional Pagination Controls */}
+          {totalPages > 1 && (
+            <nav
+              aria-label="Pagination Navigation"
+              className="pt-8 flex items-center justify-between border-t border-outline-variant/40"
             >
-              <span className="material-symbols-outlined text-base">arrow_back</span>
-              <span>Previous</span>
-            </button>
-            <div className="flex items-center gap-1">
-              <span className="w-9 h-9 rounded flex items-center justify-center bg-primary-container text-surface text-body-sm font-semibold">
-                1
-              </span>
               <button
                 type="button"
-                className="w-9 h-9 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container text-body-sm transition-colors cursor-pointer"
+                onClick={() => handlePageChange(activePage - 1)}
+                disabled={activePage <= 1}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-body-sm font-body-sm text-on-surface hover:text-secondary transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
-                2
+                <span className="material-symbols-outlined text-base">arrow_back</span>
+                <span>Previous</span>
               </button>
+
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                  const isActive = pageNum === activePage;
+                  return (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center text-body-sm font-semibold transition-all cursor-pointer ${
+                        isActive
+                          ? "bg-primary-container text-surface shadow-xs"
+                          : "text-on-surface-variant hover:bg-surface-container"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
               <button
                 type="button"
-                className="w-9 h-9 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container text-body-sm transition-colors cursor-pointer"
+                onClick={() => handlePageChange(activePage + 1)}
+                disabled={activePage >= totalPages}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-body-sm font-body-sm text-on-surface hover:text-secondary transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
-                3
+                <span>Next</span>
+                <span className="material-symbols-outlined text-base">arrow_forward</span>
               </button>
-              <span className="w-8 text-center text-outline text-body-sm">…</span>
-              <button
-                type="button"
-                className="w-9 h-9 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container text-body-sm transition-colors cursor-pointer"
-              >
-                12
-              </button>
-            </div>
-            <button
-              type="button"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-body-sm font-body-sm text-on-surface hover:text-secondary transition-colors cursor-pointer"
-            >
-              <span>Next</span>
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
-            </button>
-          </nav>
+            </nav>
+          )}
         </div>
       </div>
     </div>

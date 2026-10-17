@@ -3,10 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWishlist } from "@/context/wishlist-context";
+import { useTheme } from "@/context/theme-context";
 
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { count } = useWishlist();
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { label: "Home", href: "/" },
@@ -52,16 +56,58 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Wishlist Link with Live Counter Badge */}
+          <Link
+            href="/wishlist/"
+            className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors duration-200 border ${
+              pathname.startsWith("/wishlist")
+                ? "bg-surface-container border-primary text-primary"
+                : "border-transparent text-primary hover:bg-surface-container"
+            }`}
+            title="Saved Wishlist"
+          >
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: count > 0 ? "'FILL' 1" : "'FILL' 0",
+              }}
+            >
+              favorite
+            </span>
+            <span className="hidden sm:inline font-label-lg text-label-lg">
+              Wishlist
+            </span>
+            {count > 0 && (
+              <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-secondary text-surface text-[11px] font-bold flex items-center justify-center animate-in zoom-in duration-150">
+                {count}
+              </span>
+            )}
+          </Link>
+
+          {/* Dark / Light Mode Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container transition-colors duration-200 border border-outline-variant/60 cursor-pointer shadow-xs active:scale-95"
+            title={theme === "dark" ? "Light Mode" : "Dark Mode"}
+          >
+            <span className="material-symbols-outlined text-[19px]">
+              {theme === "dark" ? "light_mode" : "dark_mode"}
+            </span>
+          </button>
+
           <Link
             href="/contact/"
-            className="hidden sm:inline-flex items-center justify-center font-label-lg text-label-lg px-5 py-2.5 rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface transition-colors duration-200"
+            className="hidden sm:inline-flex items-center justify-center font-label-lg text-label-lg px-4 lg:px-5 py-2.5 rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface transition-colors duration-200"
           >
             Contact Us
           </Link>
+
           <Link
             href="/contact/?type=divestment"
-            className="inline-flex items-center justify-center font-label-lg text-label-lg px-5 sm:px-6 py-2.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] transition-colors duration-200"
+            className="inline-flex items-center justify-center font-label-lg text-label-lg px-4 sm:px-6 py-2.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] transition-colors duration-200"
           >
             List Your Property
           </Link>
@@ -101,8 +147,36 @@ export function Header() {
                 </Link>
               );
             })}
+            <Link
+              href="/wishlist/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between text-body-lg font-medium py-2 px-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container/50"
+            >
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px]">favorite</span>
+                <span>Saved Wishlist</span>
+              </div>
+              {count > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-secondary text-surface text-xs font-bold">
+                  {count}
+                </span>
+              )}
+            </Link>
           </nav>
           <div className="pt-4 border-t border-outline-variant/40 flex flex-col gap-3">
+            <div className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-surface-container/50 border border-outline-variant/40">
+              <span className="text-body-sm font-body-sm text-on-surface-variant font-medium">Appearance</span>
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant/60 text-label-lg font-label-lg text-primary hover:bg-surface-container transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {theme === "dark" ? "light_mode" : "dark_mode"}
+                </span>
+                <span>{theme === "dark" ? "Light" : "Dark"}</span>
+              </button>
+            </div>
             <Link
               href="/contact/"
               onClick={() => setMobileMenuOpen(false)}

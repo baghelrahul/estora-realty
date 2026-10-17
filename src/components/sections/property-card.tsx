@@ -1,26 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Property } from "@/data/properties";
+import { useWishlist } from "@/context/wishlist-context";
 
 interface PropertyCardProps {
   property: Property;
   compact?: boolean;
 }
 
-export function PropertyCard({ property, compact = false }: PropertyCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+export function PropertyCard({ property }: PropertyCardProps) {
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const wishlisted = isWishlisted(property.id);
 
   return (
     <article className="bg-surface-container-lowest border border-outline-variant/60 rounded-xl overflow-hidden hover:shadow-[0_8px_24px_-4px_rgba(32,37,34,0.08)] hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
       <div>
         <div className="relative aspect-[16/10] overflow-hidden bg-surface-container">
-          <img
-            src={property.image}
-            alt={property.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-          />
+          <Link href={`/properties/${property.slug}/`} className="block w-full h-full">
+            <img
+              src={property.image}
+              alt={property.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            />
+          </Link>
 
           {/* Status Badge */}
           <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
@@ -37,22 +40,23 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
             </span>
           </div>
 
-          {/* Favorite button */}
+          {/* Favorite Wishlist button */}
           <button
             type="button"
-            aria-label="Favorite property"
+            aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
             onClick={(e) => {
               e.preventDefault();
-              setIsFavorite(!isFavorite);
+              e.stopPropagation();
+              toggleWishlist(property.id);
             }}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-primary hover:bg-surface transition-colors cursor-pointer"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-primary hover:bg-surface transition-colors cursor-pointer shadow-sm z-10"
           >
             <span
-              className={`material-symbols-outlined text-[18px] transition-colors ${
-                isFavorite ? "text-error" : "text-primary"
+              className={`material-symbols-outlined text-[20px] transition-colors ${
+                wishlisted ? "text-error" : "text-primary"
               }`}
               style={{
-                fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0",
+                fontVariationSettings: wishlisted ? "'FILL' 1" : "'FILL' 0",
               }}
             >
               favorite
@@ -75,9 +79,11 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
             </span>
           </div>
 
-          <h3 className="font-headline-sm text-headline-sm text-primary mb-2 group-hover:text-secondary transition-colors">
-            {property.title}
-          </h3>
+          <Link href={`/properties/${property.slug}/`}>
+            <h3 className="font-headline-sm text-headline-sm text-primary mb-2 group-hover:text-secondary transition-colors">
+              {property.title}
+            </h3>
+          </Link>
           <p className="font-body-sm text-body-sm text-on-surface-variant mb-6">
             {property.address}
           </p>
@@ -85,11 +91,11 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
           <div className="flex items-center justify-between border-t border-outline-variant/40 pt-4 text-on-surface-variant font-body-sm text-body-sm">
             <div className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-[18px] text-outline">bed</span>
-              <span>{property.beds} Beds</span>
+              <span>{property.beds > 0 ? `${property.beds} Beds` : "Land"}</span>
             </div>
             <div className="flex items-center gap-1.5 border-x border-outline-variant/40 px-3">
               <span className="material-symbols-outlined text-[18px] text-outline">bathtub</span>
-              <span>{property.baths} Baths</span>
+              <span>{property.baths > 0 ? `${property.baths} Baths` : "Enclave"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-[18px] text-outline">square_foot</span>
@@ -101,7 +107,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
 
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">
         <Link
-          href="/property-details/"
+          href={`/properties/${property.slug}/`}
           className="w-full text-center block border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface py-2.5 rounded-lg text-label-lg font-label-lg transition-colors duration-200"
         >
           View Details

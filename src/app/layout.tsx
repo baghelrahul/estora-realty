@@ -5,6 +5,8 @@ import { site } from "@/lib/site";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { JsonLd } from "@/components/seo/json-ld";
+import { WishlistProvider } from "@/context/wishlist-context";
+import { ThemeProvider } from "@/context/theme-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,9 +44,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${manrope.variable} scroll-smooth antialiased`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("estora_theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})()`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -53,10 +61,14 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-on-surface font-body-md min-h-screen flex flex-col selection:bg-secondary selection:text-surface">
-        <JsonLd />
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <WishlistProvider>
+            <JsonLd />
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </WishlistProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

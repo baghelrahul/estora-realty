@@ -85,13 +85,15 @@ export function HomeSearchForm() {
               <select
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
-                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none"
+                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none cursor-pointer"
               >
-                <option value="all">Villa, Penthouse, Estate</option>
-                <option value="Modern Villa">Modern Villa</option>
-                <option value="Urban Penthouse">Urban Penthouse</option>
+                <option value="all">All Typologies</option>
+                <option value="Villa">Modern & Stone Villa</option>
+                <option value="Apartment">Apartment & Penthouse</option>
                 <option value="Architectural Estate">Architectural Estate</option>
-                <option value="Restored Stone Villa">Historic Estate</option>
+                <option value="Independent House">Independent House</option>
+                <option value="Plot / Land">Plot / Land</option>
+                <option value="Commercial">Commercial Atelier</option>
               </select>
               <span className="material-symbols-outlined absolute right-3 pointer-events-none text-outline text-[18px]">
                 expand_more
@@ -111,13 +113,24 @@ export function HomeSearchForm() {
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value)}
-                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none"
+                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none cursor-pointer"
               >
-                <option value="all">$2.5M - $15M+</option>
-                <option value="1.5-3">$1.5M - $3M</option>
-                <option value="3-7.5">$3M - $7.5M</option>
-                <option value="7.5-15">$7.5M - $15M</option>
-                <option value="15+">$15M+</option>
+                {purpose === "Buy" ? (
+                  <>
+                    <option value="all">Any Price</option>
+                    <option value="1.5-3">$1.5M - $3M</option>
+                    <option value="3-7.5">$3M - $7.5M</option>
+                    <option value="7.5-15">$7.5M - $15M</option>
+                    <option value="15+">$15M+</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="all">Any Monthly Rent</option>
+                    <option value="under-25k">Under $25,000 / mo</option>
+                    <option value="25k-50k">$25,000 – $50,000 / mo</option>
+                    <option value="50k+">$50,000+ / mo</option>
+                  </>
+                )}
               </select>
               <span className="material-symbols-outlined absolute right-3 pointer-events-none text-outline text-[18px]">
                 expand_more
@@ -137,13 +150,14 @@ export function HomeSearchForm() {
               <select
                 value={bedrooms}
                 onChange={(e) => setBedrooms(e.target.value)}
-                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none"
+                className="w-full h-12 pl-10 pr-8 bg-surface-container-lowest border border-outline-variant/80 rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container appearance-none cursor-pointer"
               >
                 <option value="all">Any Beds</option>
+                <option value="1">1+ Beds</option>
+                <option value="2">2+ Beds</option>
                 <option value="3">3+ Beds</option>
                 <option value="4">4+ Beds</option>
                 <option value="5">5+ Beds</option>
-                <option value="6">6+ Beds</option>
               </select>
               <span className="material-symbols-outlined absolute right-3 pointer-events-none text-outline text-[18px]">
                 expand_more
