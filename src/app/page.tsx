@@ -144,7 +144,7 @@ export default function HomePage() {
         <div className="mt-12 text-center">
           <Link
             href="/properties/"
-            className="inline-flex items-center gap-2 font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface transition-colors duration-200"
+            className="inline-flex items-center gap-2 font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-primary-container text-primary-container hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-surface-container transition-colors duration-200"
           >
             <span>Browse All Curated Listings</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -420,13 +420,13 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/properties/"
-                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] transition-colors duration-200"
+                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg bg-primary-container text-surface hover:bg-[#323A35] dark:bg-primary dark:text-on-primary dark:hover:bg-primary/90 transition-colors duration-200 font-semibold shadow-sm"
               >
                 Let’s Find Your Property
               </Link>
               <Link
                 href="/contact/"
-                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-primary-container text-primary hover:bg-primary-container hover:text-surface transition-colors duration-200"
+                className="font-label-lg text-label-lg px-8 py-3.5 rounded-lg border border-primary-container text-primary hover:bg-primary-container hover:text-surface dark:border-outline-variant/80 dark:text-primary dark:hover:bg-surface-container transition-colors duration-200"
               >
                 Schedule Private Consultation
               </Link>
